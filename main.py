@@ -16,8 +16,14 @@ def fizzer(i):
 def fizzbuzz(lst):
 	return [fizzer(i) for i in lst]
 
-def print_input(integers, length):
-	for i in xrange(1, length):
+def print_input(integers, length, limit = None, start = 1):
+	count = 0
+	i = start
+	while count < length:
+		if limit != None and i > limit:
+			break
 		fb = mapper(i, integers) 
-        if fb != "":
+		if fb != "":
 			print fb
+			count += 1
+		i += 1
