@@ -1,16 +1,23 @@
+import string
+def mapper(i, rules, default = "", symbols = string.letters):
+	if len(rules) > 26:
+		raise IndexError("Too many rules.")
+	output = ""
+	for idx, div in enumerate(rules):
+		if i % div == 0:
+			output += symbols[idx]
+    if output == "":
+		output = default
+    return output
+
 def fizzer(i):
-	string = ""
-	if i % 3 == 0:
-		string += "Fizz"
-	if i % 5 == 0:
-		string += "Buzz"
-	if string == "":
-		string = str(i)
-	return string
+	return mapper(i, [3, 5], default = str(i), symbols = ["Fizz", "Buzz"])
 
 def fizzbuzz(lst):
 	return [fizzer(i) for i in lst]
 
-def main(lst):
-	for x in fizzubzz(lst):
-		print x
+def print_input(integers, length):
+	for i in xrange(1, length):
+		fb = mapper(i, integers) 
+        if fb != "":
+			print fb
