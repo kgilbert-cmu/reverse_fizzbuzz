@@ -74,7 +74,7 @@ def print_input(integers, length, limit = None, start = 1, verbose = True):
 			break
 		fb = mapper(i, integers) 
 		if fb != "":
-			debug(fb, 4)
+			debug("Counted one non-empty fizzbuzz at " + str(i) + ".", 4)
 			ret.append(fb)
 			count += 1
 		i += 1
@@ -151,6 +151,7 @@ def options(variables, distance):
 	n = len(v)
 	edit = n_ary(n, distance)
 	opt = [[v[i] + t[i] for i in xrange(0, n)] for t in edit]
+	debug("There are " + str(len(opt)) + " neighbors within " + str(distance) + " distance.", 3)
 	return opt
 	
 
@@ -162,6 +163,7 @@ def brute(prints, limit = 1e3):
 
 	Returns None or a list of divisors which produce `prints`.
 	"""
+	global VERBOSE
 	number_vars = maximal(prints)
 	number_lines = len(prints)
 	iterations = 0
@@ -181,6 +183,10 @@ def brute(prints, limit = 1e3):
 			if x == prints:
 				debug("A solution was found after " + str(attempts) + " attempts.", 1)
 				return possibility
+			elif VERBOSE >= 4:
+				debug("Solution\tAttempt\tEqual?", 4)
+				for i in xrange(0, len(prints)):
+					debug("\t".join([prints[i], x[i], str(prints[i] == x[i])]), 4)
 		bfs += 1
 
 
