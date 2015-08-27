@@ -4,6 +4,7 @@ from optparse import OptionParser
 import sys
 import os
 
+
 def mapper(i, rules, default = "", symbols = string.letters):
 	"""Generalized fizzbuzz algorithm.
 
@@ -26,13 +27,16 @@ def mapper(i, rules, default = "", symbols = string.letters):
 		output = default
 	return output
 
+
 def fizzer(i):
 	"""Implement canonical FizzBuzz using mapper()"""
 	return mapper(i, [3, 5], default = str(i), symbols = ["Fizz", "Buzz"])
 
+
 def fizzbuzz(lst):
 	"""Print the FizzBuzz of every integer in lst"""
 	return [fizzer(i) for i in lst]
+
 
 def print_input(integers, length, limit = None, start = 1, verbose = True):
 	"""Print the generalized fizzbuzz for a sequence of divisors
@@ -61,6 +65,7 @@ def print_input(integers, length, limit = None, start = 1, verbose = True):
 	if not verbose:
 		return ret
 
+
 def maximal(prints):
 	"""Scan a fizzbuzz sequence and find the largest variable."""
 	biggest = ""
@@ -69,6 +74,7 @@ def maximal(prints):
 			if variable > biggest:
 				biggest = variable
 	return string.letters.index(biggest) + 1
+
 
 def increment(number, base):
 	"""Increment a LITTLE-ENDIAN number in base B"""
@@ -90,6 +96,7 @@ def increment(number, base):
 	else:
 		return None
 
+
 def n_ary(digits, total):
 	"""List all numbers in base B whose digits sum to less than B.
 
@@ -107,6 +114,7 @@ def n_ary(digits, total):
 			members.append(m_new)
 		m = m_new
 	return members
+
 
 def options(variables, distance):
 	"""Generate all BFS neighbors within D distance of variables.
@@ -156,6 +164,7 @@ def brute(prints, limit = 1e3, verbose = False):
 			if x == prints:
 				return possibility
 		bfs += 1
+
 
 def init_parser():
 	parser = OptionParser()
