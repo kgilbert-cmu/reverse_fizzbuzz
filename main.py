@@ -202,7 +202,7 @@ def brute(prints, limit = 1e3):
 					index = attempts
 		if VERBOSE >= 2:
 			debug("The closest match has been possibility #" + str(index) + ": " + str(closest), 2)
-			debug("It had " + str(best) + " matches (" + str(round(100 * best / float(len(prints)), 1)) + "%).", 2)
+			debug("It had " + str(best) + " of " + str(len(prints))  + " matches (" + str(round(100 * best / float(len(prints)), 1)) + "%).", 2)
 		bfs += 1
 
 
