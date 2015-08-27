@@ -85,18 +85,22 @@ def brute(prints, limit = 1e3, verbose = False):
 	number_vars = maximal(prints)
 	number_lines = len(prints)
 	iterations = 0
-	bfs = 0
+	bfs = 1
 	variables = [1] * number_vars
+	attempts = 0
 	if verbose:
 		print "Detected " + str(number_vars) + " variables over " + str(number_lines) + " lines."
 	while True:
 		if verbose:
-			print "BFS depth:", bfs
+			print "At least " + str(attempts) + " attempts have been made."
+			print "Now checking possibilities with BFS depth:", bfs
 		if limit != None and iterations > limit:
 			return None
 		for possibility in options(variables, bfs):
 			x = print_input(possibility, number_lines, verbose = False)
+			attempts += 1
 			if x == prints:
+				print "A solution was found after " + str(attempts) + " attempts."
 				return possibility
 		bfs += 1
 
