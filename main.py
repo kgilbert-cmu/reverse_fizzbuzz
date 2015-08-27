@@ -133,7 +133,7 @@ def options(variables, distance):
 	"""
 	v = variables
 	n = len(v)
-	edit = n_ary(n, v)
+	edit = n_ary(n, distance)
 	opt = [[v[i] + t[i] for i in xrange(0, n)] for t in edit]
 	return opt
 	
