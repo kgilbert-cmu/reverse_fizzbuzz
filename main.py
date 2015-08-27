@@ -4,6 +4,19 @@ from optparse import OptionParser
 import sys
 import os
 
+VERBOSE = -1
+
+# Verbosity levels:
+## 0 = Nothing
+## 1 = Important  (Errors)
+## 2 = Messages   (Warnings)
+## 3 = Sanity     (Variables)
+## 4 = Everything (crazy)
+def debug(message, verbosity):
+	global VERBOSE
+	if VERBOSE >= verbosity:
+		print message
+
 def mapper(i, rules, default = "", symbols = string.letters):
 	if len(rules) > 26:
 		raise IndexError("Too many rules.")
@@ -30,8 +43,7 @@ def print_input(integers, length, limit = None, start = 1, verbose = True):
 			break
 		fb = mapper(i, integers) 
 		if fb != "":
-			if verbose:
-				print fb
+			debug(fb, 4)
 			ret.append(fb)
 			count += 1
 		i += 1
@@ -88,26 +100,25 @@ def brute(prints, limit = 1e3, verbose = False):
 	bfs = 1
 	variables = [1] * number_vars
 	attempts = 0
-	if verbose:
-		print "Detected " + str(number_vars) + " variables over " + str(number_lines) + " lines."
+	debug("Detected " + str(number_vars) + " variables over " + str(number_lines) + " lines.", 2)
 	while True:
-		if verbose:
-			print "At least " + str(attempts) + " attempts have been made."
-			print "Now checking possibilities with BFS depth:", bfs
+		debug("At least " + str(attempts) + " attempts have been made.", 2)
+		debug("Now checking possibilities with BFS depth: " + str(bfs), 2)
 		if limit != None and iterations > limit:
 			return None
 		for possibility in options(variables, bfs):
+			debug("Now trying possibility #" + str(attempts) + ": " + str(possibility), 3)
 			x = print_input(possibility, number_lines, verbose = False)
 			attempts += 1
 			if x == prints:
-				print "A solution was found after " + str(attempts) + " attempts."
+				debug("A solution was found after " + str(attempts) + " attempts.", 1)
 				return possibility
 		bfs += 1
 
 def init_parser():
 	parser = OptionParser()
 	parser.add_option("-f", "--file", dest = "File", type = "string", help = "Input file")
-	parser.add_option("-v", "--verbose", dest = "Verbose", type = "string", help = "Verbosity level")
+	parser.add_option("-v", "--verbose", dest = "Verbose", type = "int", help = "Verbosity level")
 	(options, args) = parser.parse_args()  # user input is stored in "options"
 	return options
 
@@ -119,15 +130,16 @@ def main():
 	else:
 		if not os.path.isfile(options.File):
 			raise IOError("Could not find input file.")
+	global VERBOSE
 	if options.Verbose == None:
-		verbose = False
+		VERBOSE = 1
 	else:
-		verbose = True
+		VERBOSE = options.Verbose
 	lines = []
 	with open(options.File, 'r') as input_file:
 		for line in input_file:
 			lines.append(line.strip())
-	print brute(lines, verbose = verbose)
+	debug(brute(lines), 1)
 
 if __name__ == "__main__":
 	main()
