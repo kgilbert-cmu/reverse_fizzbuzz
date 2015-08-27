@@ -4,7 +4,8 @@ Submission for [Daily Programming # 229 Intermediate](https://www.reddit.com/r/d
 
 It's too slow, though.
 
-	~/programming/daily/229 $ time python main.py -f 2-5-4.txt -v yes
+	~/programming/daily/229 $ time python main.py -f inputs/2-5-4.txt -v yes
+    Detected 3 variables over 13 lines.
 	BFS depth: 0
 	BFS depth: 1
 	BFS depth: 2
@@ -20,7 +21,8 @@ It's too slow, though.
 	user	0m0.054s
 	sys	0m0.013s
 
-	~/programming/daily/229 $ time python main.py -f 3-5.txt -v yes
+	~/programming/daily/229 $ time python main.py -f inputs/3-5.txt -v yes
+    Detected 2 variables over 6 lines.
 	BFS depth: 0
 	BFS depth: 1
 	BFS depth: 2
@@ -34,7 +36,8 @@ It's too slow, though.
 	user	0m0.028s
 	sys	0m0.012s
 
-	~/programming/daily/229 $ time python main.py -f 3-1-8-8-2.txt -v yes
+	~/programming/daily/229 $ time python main.py -f inputs/3-1-8-8-2.txt -v yes
+    Detected 5 variables over 7 lines.
 	BFS depth: 0
 	BFS depth: 1
 	BFS depth: 2
@@ -59,7 +62,8 @@ It's too slow, though.
 	user	1m17.704s
 	sys	0m0.232s
 
-	~/programming/daily/229 $ time python main.py -f 6-9-10-11.txt -v yes
+	~/programming/daily/229 $ time python main.py -f inputs/6-9-10-11.txt -v yes
+    Detected 4 variables over 6 lines.
 	BFS depth: 0
 	BFS depth: 1
 	BFS depth: 2

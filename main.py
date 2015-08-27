@@ -87,6 +87,8 @@ def brute(prints, limit = 1e3, verbose = False):
 	iterations = 0
 	bfs = 0
 	variables = [1] * number_vars
+	if verbose:
+		print "Detected " + str(number_vars) + " variables over " + str(number_lines) + " lines."
 	while True:
 		if verbose:
 			print "BFS depth:", bfs
