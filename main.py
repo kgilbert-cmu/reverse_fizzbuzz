@@ -1,7 +1,8 @@
 import string
 import copy
-
-VERBOSE = False
+from optparse import OptionParser
+import sys
+import os
 
 def mapper(i, rules, default = "", symbols = string.letters):
 	if len(rules) > 26:
@@ -88,7 +89,7 @@ def brute(prints, limit = 1e3, verbose = False):
 	variables = [2] * number_vars
 	while True:
 		if verbose:
-			print bfs
+			print "BFS depth:", bfs
 		if limit != None and iterations > limit:
 			return None
 		for possibility in options(variables, bfs):
@@ -97,13 +98,31 @@ def brute(prints, limit = 1e3, verbose = False):
 				return possibility
 		bfs += 1
 
-def main(text):
+def init_parser():
+	parser = OptionParser()
+	parser.add_option("-f", "--file", dest = "File", type = "string", help = "Input file")
+	parser.add_option("-v", "--verbose", dest = "Verbose", type = "string", help = "Verbosity level")
+	(options, args) = parser.parse_args()  # user input is stored in "options"
+	return options
+
+def main():
+	options = init_parser()
+	if options.File == None:
+		print "Error: No input file was provided."
+		sys.exit(1)
+	else:
+		if not os.path.isfile(options.File):
+			raise IOError("Could not find input file.")
+	if options.Verbose == None:
+		verbose = False
+	else:
+		verbose = True
 	lines = []
-	with open(text, 'r') as input_file:
+	with open(options.File, 'r') as input_file:
 		for line in input_file:
 			lines.append(line.strip())
-	print brute(lines, VERBOSE)
+	print brute(lines, verbose = verbose)
 
 if __name__ == "__main__":
-	main("2-5-4.txt")
+	main()
 
