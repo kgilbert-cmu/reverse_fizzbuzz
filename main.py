@@ -1,8 +1,10 @@
-import string
-import copy
-from optparse import OptionParser
-import sys
 import os
+import string
+import sys
+
+# Deep copy lists to prevent modifying x in x_new = foo(x)
+from copy import deepcopy
+from optparse import OptionParser
 
 VERBOSE = -1
 
@@ -18,6 +20,17 @@ def debug(message, verbosity):
 		print message
 
 def mapper(i, rules, default = "", symbols = string.letters):
+	"""Generalized fizzbuzz algorithm.
+
+		i : integer
+		rules : list of divisors
+		default : default string if i is not divisible by any rule
+		symbols : the language of words to print "Fizz" and "Buzz"
+
+	symbols will default to a-zA-Z using string.letters
+	
+	Returns the fizzbuzz string for integer i.
+	"""
 	if len(rules) > 26:
 		raise IndexError("Too many rules.")
 	output = ""
@@ -28,13 +41,28 @@ def mapper(i, rules, default = "", symbols = string.letters):
 		output = default
 	return output
 
+
 def fizzer(i):
+	"""Implement canonical FizzBuzz using mapper()"""
 	return mapper(i, [3, 5], default = str(i), symbols = ["Fizz", "Buzz"])
 
+
 def fizzbuzz(lst):
+	"""Print the FizzBuzz of every integer in lst"""
 	return [fizzer(i) for i in lst]
 
+
 def print_input(integers, length, limit = None, start = 1, verbose = True):
+	"""Print the generalized fizzbuzz for a sequence of divisors
+
+		integers : sequence of divisors from Intermediate #229
+		length : the number of non-empty lines to print
+		limit : stop iteration after `limit` times (default: None)
+		start : first integer to iterate from (default: 1)
+		verbose : should this function print output?
+
+	If verbose is set to False, then this will *return* fizzbuzz.
+	"""
 	count = 0
 	ret = []
 	i = start
@@ -50,7 +78,9 @@ def print_input(integers, length, limit = None, start = 1, verbose = True):
 	if not verbose:
 		return ret
 
+
 def maximal(prints):
+	"""Scan a fizzbuzz sequence and find the largest variable."""
 	biggest = ""
 	for line in prints:
 		for variable in line:
@@ -58,8 +88,12 @@ def maximal(prints):
 				biggest = variable
 	return string.letters.index(biggest) + 1
 
+
 def increment(number, base):
-	digits = copy.deepcopy(number)
+	"""Increment a LITTLE-ENDIAN number in base B"""
+	# in a loop, we don't want x_new = increment(x) to modify x
+	# (in the event x is a list and not a tuple)
+	digits = deepcopy(number)
 	i = 0
 	added = False
 	while i < len(digits):
@@ -75,8 +109,16 @@ def increment(number, base):
 	else:
 		return None
 
-# all numbers in base total with D digits and less than total
+
 def n_ary(digits, total):
+	"""List all numbers in base B whose digits sum to less than B.
+
+		digits : number of digits to fill
+		total : the base B and the total digits should sum to
+
+	Returns a list of n-digit numbers in base-b.
+	Each number is a list of digits in little-endian.
+	"""
 	members = []
 	m = [0] * digits
 	while m != None:
@@ -86,14 +128,38 @@ def n_ary(digits, total):
 		m = m_new
 	return members
 
+
 def options(variables, distance):
-	n = len(variables)
+	"""Generate all BFS neighbors within D distance of variables.
+
+		variables : v \in Z^n with v_i representing one divisor
+		distance : edit distance to consider
+
+	The edit distance between nodes v and w is:
+
+		\sum_i abs(v_i - w_i)
+
+	That is to say, it is the number of +1 increments necessary.
+
+	Given a maximum number of +1 increments to apply,
+	Return a list of all w within D range of variables.
+	"""
+	v = variables
+	n = len(v)
 	edit = n_ary(n, distance)
-	opt = [ [variables[i] + t[i] for i in xrange(0, n)] for t in edit]
+	opt = [[v[i] + t[i] for i in xrange(0, n)] for t in edit]
 	return opt
 	
 
 def brute(prints, limit = 1e3, verbose = False):
+	"""Brute-force solution to Intermediate #229.
+
+		prints : sequence of strings
+		limit : stop iterating BFS after this many levels
+		verbose : should this function print output?
+
+	Returns None or a list of divisors which produce `prints`.
+	"""
 	number_vars = maximal(prints)
 	number_lines = len(prints)
 	iterations = 0
@@ -114,6 +180,7 @@ def brute(prints, limit = 1e3, verbose = False):
 				debug("A solution was found after " + str(attempts) + " attempts.", 1)
 				return possibility
 		bfs += 1
+
 
 def init_parser():
 	parser = OptionParser()
