@@ -122,8 +122,8 @@ def n_ary(digits, total):
 	Returns a list of n-digit numbers in base-b.
 	Each number is a list of digits in little-endian.
 	"""
-	members = []
 	m = [0] * digits
+	members = [m]
 	while m != None:
 		m_new = increment(m, total)
 		if m_new != None and sum(m_new) <= total:
