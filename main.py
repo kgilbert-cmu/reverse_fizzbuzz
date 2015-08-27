@@ -8,13 +8,16 @@ from optparse import OptionParser
 
 VERBOSE = -1
 
-# Verbosity levels:
-## 0 = Nothing
-## 1 = Important  (Errors)
-## 2 = Messages   (Warnings)
-## 3 = Sanity     (Variables)
-## 4 = Everything (crazy)
 def debug(message, verbosity):
+	"""Print message if verbosity level is met.
+
+	Verbosity levels:
+	0 = Nothing
+	1 = Important  (Errors and typical print messages)
+	2 = Messages   (Warnings and program status)
+	3 = Sanity     (more status and/or "did I get here yet?")
+	4 = Everything (crazy!)
+	"""
 	global VERBOSE
 	if VERBOSE >= verbosity:
 		print message
@@ -151,12 +154,11 @@ def options(variables, distance):
 	return opt
 	
 
-def brute(prints, limit = 1e3, verbose = False):
+def brute(prints, limit = 1e3):
 	"""Brute-force solution to Intermediate #229.
 
 		prints : sequence of strings
 		limit : stop iterating BFS after this many levels
-		verbose : should this function print output?
 
 	Returns None or a list of divisors which produce `prints`.
 	"""
