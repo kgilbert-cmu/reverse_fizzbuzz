@@ -8,13 +8,16 @@ from optparse import OptionParser
 
 VERBOSE = -1
 
-# Verbosity levels:
-## 0 = Nothing
-## 1 = Important  (Errors)
-## 2 = Messages   (Warnings)
-## 3 = Sanity     (Variables)
-## 4 = Everything (crazy)
 def debug(message, verbosity):
+	"""Print message if verbosity level is met.
+
+	Verbosity levels:
+	0 = Nothing
+	1 = Important  (Errors and typical print messages)
+	2 = Messages   (Warnings and program status)
+	3 = Sanity     (more status and/or "did I get here yet?")
+	4 = Everything (crazy!)
+	"""
 	global VERBOSE
 	if VERBOSE >= verbosity:
 		print message
@@ -71,7 +74,7 @@ def print_input(integers, length, limit = None, start = 1, verbose = True):
 			break
 		fb = mapper(i, integers) 
 		if fb != "":
-			debug(fb, 4)
+			debug("Found a non-empty multiple at: " + str(i), 4)
 			ret.append(fb)
 			count += 1
 		i += 1
@@ -119,8 +122,8 @@ def n_ary(digits, total):
 	Returns a list of n-digit numbers in base-b.
 	Each number is a list of digits in little-endian.
 	"""
-	members = []
 	m = [0] * digits
+	members = [m]
 	while m != None:
 		m_new = increment(m, total)
 		if m_new != None and sum(m_new) <= total:
@@ -148,37 +151,58 @@ def options(variables, distance):
 	n = len(v)
 	edit = n_ary(n, distance)
 	opt = [[v[i] + t[i] for i in xrange(0, n)] for t in edit]
+	debug("There are " + str(len(opt)) + " neighbors within " + str(distance) + " distance.", 3)
 	return opt
 	
 
-def brute(prints, limit = 1e3, verbose = False):
+def brute(prints, limit = 1e3):
 	"""Brute-force solution to Intermediate #229.
 
 		prints : sequence of strings
 		limit : stop iterating BFS after this many levels
-		verbose : should this function print output?
 
 	Returns None or a list of divisors which produce `prints`.
 	"""
+	global VERBOSE
 	number_vars = maximal(prints)
 	number_lines = len(prints)
 	iterations = 0
 	bfs = 1
 	variables = [1] * number_vars
 	attempts = 0
+	best = 0
+	closest = None
+	index = 0
 	debug("Detected " + str(number_vars) + " variables over " + str(number_lines) + " lines.", 2)
 	while True:
+		debug("", 2)
 		debug("At least " + str(attempts) + " attempts have been made.", 2)
-		debug("Now checking possibilities with BFS depth: " + str(bfs), 2)
+		debug("Generating possibilities with BFS depth " + str(bfs)+ "...", 2)
 		if limit != None and iterations > limit:
 			return None
 		for possibility in options(variables, bfs):
+			attempts += 1
+			debug("", 4)
 			debug("Now trying possibility #" + str(attempts) + ": " + str(possibility), 3)
 			x = print_input(possibility, number_lines, verbose = False)
-			attempts += 1
+			if VERBOSE >= 4:
+				debug("Actual\tAttempt\tEqual?", 4)
+				for i in xrange(0, len(prints)):
+					debug("\t".join([prints[i], x[i], str(prints[i] == x[i])]), 4)
 			if x == prints:
+				debug("", 1)
+				debug("______________________________________", 1)
 				debug("A solution was found after " + str(attempts) + " attempts.", 1)
 				return possibility
+			else:
+				matches = sum([v == p for v, p in zip(x, prints)])
+				if matches > best:
+					best = matches
+					closest = possibility
+					index = attempts
+		if VERBOSE >= 2:
+			debug("The closest match has been possibility #" + str(index) + ": " + str(closest), 2)
+			debug("It had " + str(best) + " of " + str(len(prints))  + " matches (" + str(round(100 * best / float(len(prints)), 1)) + "%).", 2)
 		bfs += 1
 
 
