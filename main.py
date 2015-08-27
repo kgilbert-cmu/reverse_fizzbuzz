@@ -74,7 +74,7 @@ def print_input(integers, length, limit = None, start = 1, verbose = True):
 			break
 		fb = mapper(i, integers) 
 		if fb != "":
-			debug("Counted one non-empty fizzbuzz at " + str(i) + ".", 4)
+			debug("Found a non-empty multiple at: " + str(i), 4)
 			ret.append(fb)
 			count += 1
 		i += 1
@@ -170,23 +170,39 @@ def brute(prints, limit = 1e3):
 	bfs = 1
 	variables = [1] * number_vars
 	attempts = 0
+	best = 0
+	closest = None
+	index = 0
 	debug("Detected " + str(number_vars) + " variables over " + str(number_lines) + " lines.", 2)
 	while True:
+		debug("", 2)
 		debug("At least " + str(attempts) + " attempts have been made.", 2)
-		debug("Now checking possibilities with BFS depth: " + str(bfs), 2)
+		debug("Generating possibilities with BFS depth " + str(bfs)+ "...", 2)
 		if limit != None and iterations > limit:
 			return None
 		for possibility in options(variables, bfs):
+			attempts += 1
+			debug("", 4)
 			debug("Now trying possibility #" + str(attempts) + ": " + str(possibility), 3)
 			x = print_input(possibility, number_lines, verbose = False)
-			attempts += 1
-			if x == prints:
-				debug("A solution was found after " + str(attempts) + " attempts.", 1)
-				return possibility
-			elif VERBOSE >= 4:
-				debug("Solution\tAttempt\tEqual?", 4)
+			if VERBOSE >= 4:
+				debug("Actual\tAttempt\tEqual?", 4)
 				for i in xrange(0, len(prints)):
 					debug("\t".join([prints[i], x[i], str(prints[i] == x[i])]), 4)
+			if x == prints:
+				debug("", 1)
+				debug("______________________________________", 1)
+				debug("A solution was found after " + str(attempts) + " attempts.", 1)
+				return possibility
+			else:
+				matches = sum([v == p for v, p in zip(x, prints)])
+				if matches > best:
+					best = matches
+					closest = possibility
+					index = attempts
+		if VERBOSE >= 2:
+			debug("The closest match has been possibility #" + str(index) + ": " + str(closest), 2)
+			debug("It had " + str(best) + " matches (" + str(round(100 * best / float(len(prints)), 1)) + "%).", 2)
 		bfs += 1
 
 
