@@ -1,9 +1,10 @@
-import string
-import copy
-from optparse import OptionParser
-import sys
 import os
+import string
+import sys
 
+# Deep copy lists to prevent modifying x in x_new = foo(x)
+from copy import deepcopy
+from optparse import OptionParser
 
 def mapper(i, rules, default = "", symbols = string.letters):
 	"""Generalized fizzbuzz algorithm.
@@ -80,7 +81,7 @@ def increment(number, base):
 	"""Increment a LITTLE-ENDIAN number in base B"""
 	# in a loop, we don't want x_new = increment(x) to modify x
 	# (in the event x is a list and not a tuple)
-	digits = copy.deepcopy(number)
+	digits = deepcopy(number)
 	i = 0
 	added = False
 	while i < len(digits):
